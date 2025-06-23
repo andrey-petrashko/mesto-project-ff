@@ -1,37 +1,38 @@
-import { cardTemplate, popupImage } from "./index.js";
-import { openPopup } from "./popups.js";
+import { cardTemplate } from "./index.js";
 
-export function createCard(cardData) {
+export const createCard = (
+  cardData,
+  onDeleteCard,
+  onLikeCard,
+  onOpenImagePopup
+) => {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
   cardImage.src = cardData.link;
   cardImage.alt = "Фото " + cardData.name;
-  cardImage.addEventListener("click", function () {
-    openPopup(popupImage);
-    const largeImage = document.querySelector(".popup__image");
-    largeImage.src = cardData.link;
-    largeImage.alt = "Фото " + cardData.name;
-    const largeImageCaption = document.querySelector(".popup__caption");
-    largeImageCaption.textContent = cardData.name;
-  });
-
   cardElement.querySelector(".card__title").textContent = cardData.name;
+  cardImage.addEventListener("click", onOpenImagePopup);
+
   const deleteButton = cardElement.querySelector(".card__delete-button");
-  deleteButton.addEventListener("click", function () {
-    const listItem = deleteButton.closest(".places__item");
-    deleteCard(listItem);
-  });
+  deleteButton.addEventListener("click", () => onDeleteCard(cardElement));
+
   const likeButton = cardElement.querySelector(".card__like-button");
-  likeButton.addEventListener("click", function () {
-    if (likeButton.classList.contains("card__like-button_is-active")) {
-      likeButton.classList.remove("card__like-button_is-active");
-    } else {
-      likeButton.classList.add("card__like-button_is-active");
-    }
-  });
+  likeButton.addEventListener("click", () => onLikeCard(likeButton));
+
+  cardImage.addEventListener("click", () => onOpenImagePopup(cardData));
+
   return cardElement;
+};
+
+export function handleLike(likeButton) {
+  if (likeButton.classList.contains("card__like-button_is-active")) {
+    likeButton.classList.remove("card__like-button_is-active");
+  } else {
+    likeButton.classList.add("card__like-button_is-active");
+  }
 }
 
-function deleteCard(listItem) {
+export function handleDelete(cardElement) {
+  const listItem = cardElement.closest(".places__item");
   listItem.remove();
 }
