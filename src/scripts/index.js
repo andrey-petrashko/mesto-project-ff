@@ -47,7 +47,8 @@ formNewPlace.addEventListener("submit", function (event) {
     newCardData,
     handleDelete,
     handleLike,
-    openImagePopup
+    openImagePopup,
+    cardTemplate
   );
   formNewPlace.reset();
   places__list.prepend(cardElement);
