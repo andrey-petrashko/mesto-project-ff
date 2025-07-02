@@ -25,3 +25,7 @@ export const getProfileInfo = () => {
       return (data);
     });
 };
+
+export const deleteCard = (cardId) => {
+  
+}
