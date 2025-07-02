@@ -16,13 +16,11 @@ export const createCard = (
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const cardId = cardData["_id"];
   let likeArray = [];
-
   if (cardData.likes) {
-    likeArray = Array.from(cardData.likes);
+  likeArray = Array.from(cardData.likes);
   }
   const likeCount = likeArray.length;
   likeCounter.textContent = likeCount;
-
   cardImage.src = cardData.link;
   cardImage.alt = "Фото " + cardData.name;
   cardElement.querySelector(".card__title").textContent = cardData.name;
@@ -41,7 +39,7 @@ export const createCard = (
   });
 
   likeButton.addEventListener("click", () =>
-    onLikeCard(likeButton, cardData.cardId, likeCounter)
+    onLikeCard(likeButton, cardId, likeCounter)
   );
   cardImage.addEventListener("click", () => onOpenImagePopup(cardData));
   return cardElement;

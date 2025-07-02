@@ -42,7 +42,8 @@ export const likeCard = (cardId, method) => {
   })
     .then((res) => res.json())
     .then((data) => {
-      const counter = Array.from(data.likes).length;
+      const likeArray = data.likes ? Array.from(data.likes) : [];
+      const counter = likeArray.length;
       return counter;
     });
 };

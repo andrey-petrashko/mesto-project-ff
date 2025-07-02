@@ -89,7 +89,7 @@ formNewPlace.addEventListener("submit", function (event) {
       const newCardData = {};
       newCardData.name = data.name;
       newCardData.link = data.link;
-      newCardData.cardId = data["_id"];
+      newCardData["_id"] = data["_id"];
       const myId = data.owner["_id"];
       newCardData.owner = data.owner;
       const cardElement = createCard(
@@ -164,6 +164,7 @@ function renderProfileInfo(data) {
 function renderCard(initialCards, myId) {
   initialCards.forEach(function (elements) {
     const cardData = elements;
+
     const cardElement = createCard(
       cardData,
       myId,
