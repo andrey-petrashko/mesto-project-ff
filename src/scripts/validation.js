@@ -29,6 +29,14 @@ const checkInputValidity = (
   inputErrorClass,
   errorClass
 ) => {
+
+ if (inputElement.validity.patternMismatch) {
+    inputElement.setCustomValidity(inputElement.dataset.customErrorMessage);
+  } else {
+    inputElement.setCustomValidity("");
+  }
+
+
   if (!inputElement.validity.valid) {
     showInputError(
       formElement,

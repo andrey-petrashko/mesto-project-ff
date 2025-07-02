@@ -1,5 +1,12 @@
 import "../pages/index.css";
 import { createCard, handleDelete, handleLike } from "./card.js";
+import {
+  getInitialCards,
+  getProfileInfo,
+  patchProfileInfo,
+  patchChangeAvatar,
+  postNewPlace,
+} from "./api.js";
 
 import {
   prepareAnimation,
@@ -17,11 +24,16 @@ const validationConfig = {
   inputErrorClass: "popup__input_type_error",
   errorClass: "popup__error_visible",
 };
-
+const profileImageContainer = document.querySelector(
+  ".profile__image-container"
+);
+const newCardButton = document.querySelector(".profile__add-button");
+const profileEditButton = document.querySelector(".profile__edit-button");
 const content = document.querySelector(".content");
 const places__list = content.querySelector(".places__list");
 const cardTemplate = document.querySelector("#card-template").content;
 const profileDescription = document.querySelector(".profile__description");
+const popups = document.querySelectorAll(".popup");
 const popupProfileEdit = document.querySelector(".popup_type_edit");
 const profileImage = document.querySelector(".profile__image");
 const formPopupProfileEdit = popupProfileEdit.querySelector(".popup__form");
@@ -50,76 +62,34 @@ const imagePopupCaption = largeImagePopup.querySelector(".popup__caption");
 formEditProfile.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  fetch('https://nomoreparties.co/v1/wff-cohort-41/users/me', {
-    method: 'PATCH',
-    headers: {
-      authorization: '8d0b0fef-7fc0-4f9e-a81c-c75c92bbe32f',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      name: profileNameInput.value,
-      about: profileDescriptionInput.value
-    })
-  })
-    .then(function(res) {
-      return res.json();
-    })
-    .then((data) => {
+  patchProfileInfo(profileNameInput.value, profileDescriptionInput.value).then(
+    (data) => {
       profileTitle.textContent = data.name;
       profileDescription.textContent = data.about;
-      console.log(data);
-    });
-
-  closePopup(popupProfileEdit);
+      closePopup(popupProfileEdit);
+    }
+  );
 });
-
 
 formChangeAvatar.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  fetch('https://nomoreparties.co/v1/wff-cohort-41/users/me/avatar', {
-    method: 'PATCH',
-    headers: {
-      authorization: '8d0b0fef-7fc0-4f9e-a81c-c75c92bbe32f',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      avatar: avatarInput.value,
-      
-    })
-  })
-    .then(function(res) {
-      return res.json();
-    })
-    .then((data) => {
-      profileImage.style.backgroundImage = `url(${data.avatar})`;
-
-    });
-      closePopup(popupChangeAvatar);
+  patchChangeAvatar(avatarInput.value).then((data) => {
+    profileImage.style.backgroundImage = `url(${data.avatar})`;
+    formChangeAvatar.reset();
+    closePopup(popupChangeAvatar);
+  });
 });
 
 formNewPlace.addEventListener("submit", function (event) {
   event.preventDefault();
-  const newCardData = {};
 
-  fetch("https://nomoreparties.co/v1/wff-cohort-41/cards", {
-    method: "POST",
-    headers: {
-      authorization: "8d0b0fef-7fc0-4f9e-a81c-c75c92bbe32f",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      name: descriptionPictureInput.value,
-      link: linkPictureInput.value,
-    }),
-  })
-    .then(function (res) {
-      return res.json();
-    })
-    .then((data) => {
-     const newCardData = {};
+  postNewPlace(descriptionPictureInput.value, linkPictureInput.value).then(
+    (data) => {
+      const newCardData = {};
       newCardData.name = data.name;
       newCardData.link = data.link;
+      newCardData.cardId = data["_id"];
       const myId = data.owner["_id"];
       newCardData.owner = data.owner;
       const cardElement = createCard(
@@ -133,18 +103,16 @@ formNewPlace.addEventListener("submit", function (event) {
       formNewPlace.reset();
       places__list.prepend(cardElement);
       closePopup(popupNewCard);
-    })
-  }
-);
+    }
+  );
+});
 
-const popups = document.querySelectorAll(".popup");
 prepareAnimation(popups);
 
 popups.forEach(function (element) {
   element.addEventListener("click", handleOverlayClick);
 });
 
-const profileEditButton = document.querySelector(".profile__edit-button");
 profileEditButton.addEventListener("click", openPopupProfileEdit);
 
 function openPopupProfileEdit() {
@@ -154,15 +122,13 @@ function openPopupProfileEdit() {
   openPopup(popupProfileEdit);
 }
 
-const profileImageContainer = document.querySelector(".profile__image-container");
 profileImageContainer.addEventListener("click", openPopupChangeAvatar);
 
-function openPopupChangeAvatar(){
+function openPopupChangeAvatar() {
   clearValidation(formChangeAvatar, validationConfig);
   openPopup(popupChangeAvatar);
 }
 
-const newCardButton = document.querySelector(".profile__add-button");
 newCardButton.addEventListener("click", openPopupNewCard);
 
 function openPopupNewCard() {
@@ -180,18 +146,14 @@ function openImagePopup(cardData) {
 
 enableValidation(validationConfig);
 
-import { getInitialCards, getProfileInfo } from "./api.js";
-
 Promise.all([getInitialCards(), getProfileInfo()])
   .then(([initialCards, profileInfo]) => {
-    console.log(initialCards,' ', profileInfo);
     renderCard(initialCards, profileInfo._id);
     renderProfileInfo(profileInfo);
   })
-  .catch(error => {
-    console.error('Ошибка при загрузке данных:', error);
-  }
-);
+  .catch((error) => {
+    console.error("Ошибка при загрузке данных:", error);
+  });
 
 function renderProfileInfo(data) {
   profileTitle.textContent = data.name;

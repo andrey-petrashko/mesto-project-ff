@@ -20,8 +20,10 @@
 }
 
 .popup__button_disabled {
-  background-color: transparent;
-  color: gray;
+  background-color: #fff;
+  color: #c4c4c4;
+  border: 1px solid #c4c4c4;
+  pointer-events: none;
 }
 
 @media screen and (max-width: 568px) {
