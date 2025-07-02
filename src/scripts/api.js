@@ -27,5 +27,13 @@ export const getProfileInfo = () => {
 };
 
 export const deleteCard = (cardId) => {
-  
+  fetch(config.baseUrl + "/cards/" + cardId, { 
+    method: 'DELETE',
+    headers: config.headers })
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (data) {
+      console.log(data);
+    });
 }

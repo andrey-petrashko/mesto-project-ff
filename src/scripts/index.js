@@ -137,7 +137,7 @@ formNewPlace.addEventListener("submit", function (event) {
         cardTemplate
       );
       formNewPlace.reset();
-      places__list.append(cardElement);
+      places__list.prepend(cardElement);
       closePopup(popupNewCard);
     })
     });
@@ -162,7 +162,7 @@ function renderCard(initialCards, myId) {
       openImagePopup,
       cardTemplate
     );
-    places__list.prepend(cardElement);
+    places__list.append(cardElement);
   });
 }
 

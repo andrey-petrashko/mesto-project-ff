@@ -16,7 +16,8 @@ export const createCard = (
 
   const deleteButton = cardElement.querySelector(".card__delete-button");
   if (cardOwner === myId) {
-    deleteButton.addEventListener("click", () => onDeleteCard(cardElement));
+    const cardId = cardData['_id'];
+    deleteButton.addEventListener("click", () => onDeleteCard(cardElement, cardId));
   }
   else {deleteButton.style.display = 'none';}
 
@@ -33,8 +34,10 @@ export function handleLike(likeButton) {
     likeButton.classList.add("card__like-button_is-active");
   }
 }
+import { deleteCard } from "./api";
 
-export function handleDelete(cardElement) {
+export function handleDelete(cardElement, cardId) {
+  deleteCard(cardId);
   const listItem = cardElement.closest(".places__item");
   listItem.remove();
 }
