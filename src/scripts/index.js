@@ -1,7 +1,6 @@
 import "../pages/index.css";
 import { createCard, handleDelete, handleLike } from "./card.js";
 
-
 import {
   prepareAnimation,
   handleOverlayClick,
@@ -19,9 +18,8 @@ const validationConfig = {
   errorClass: "popup__error_visible",
 };
 
-
 const content = document.querySelector(".content");
-export const places__list = content.querySelector(".places__list");
+const places__list = content.querySelector(".places__list");
 const cardTemplate = document.querySelector("#card-template").content;
 const profileDescription = document.querySelector(".profile__description");
 const popupProfileEdit = document.querySelector(".popup_type_edit");
@@ -30,11 +28,9 @@ const formPopupProfileEdit = popupProfileEdit.querySelector(".popup__form");
 const popupChangeAvatar = document.querySelector(".popup_type_change-avatar");
 const formChangeAvatar = popupChangeAvatar.querySelector(".popup__form");
 const avatarInput = formChangeAvatar.querySelector(".popup__input_type_avatar");
-
 const profileDescriptionInput = popupProfileEdit.querySelector(
   ".popup__input_type_description"
 );
-
 const popupNewCard = document.querySelector(".popup_type_new-card");
 const newCardForm = popupNewCard.querySelector(".popup__form");
 const profileNameInput = popupProfileEdit.querySelector(
@@ -46,8 +42,6 @@ const formEditProfile = document.forms["edit-profile"];
 const descriptionPictureInput = popupNewCard.querySelector(
   ".popup__input_type_card-name"
 );
-
-
 const linkPictureInput = popupNewCard.querySelector(".popup__input_type_url");
 const largeImagePopup = document.querySelector(".popup_type_image");
 const largeImage = largeImagePopup.querySelector(".popup__image");
@@ -140,32 +134,8 @@ formNewPlace.addEventListener("submit", function (event) {
       places__list.prepend(cardElement);
       closePopup(popupNewCard);
     })
-    });
-
-
-
-
-
-
-
-
-
-
-function renderCard(initialCards, myId) {
-  initialCards.forEach(function (elements) {
-    const cardData = elements;
-    const cardElement = createCard(
-      cardData,
-      myId,
-      handleDelete,
-      handleLike,
-      openImagePopup,
-      cardTemplate
-    );
-    places__list.append(cardElement);
-  });
-}
-
+  }
+);
 
 const popups = document.querySelectorAll(".popup");
 prepareAnimation(popups);
@@ -192,7 +162,6 @@ function openPopupChangeAvatar(){
   openPopup(popupChangeAvatar);
 }
 
-
 const newCardButton = document.querySelector(".profile__add-button");
 newCardButton.addEventListener("click", openPopupNewCard);
 
@@ -213,7 +182,6 @@ enableValidation(validationConfig);
 
 import { getInitialCards, getProfileInfo } from "./api.js";
 
-
 Promise.all([getInitialCards(), getProfileInfo()])
   .then(([initialCards, profileInfo]) => {
     console.log(initialCards,' ', profileInfo);
@@ -222,13 +190,26 @@ Promise.all([getInitialCards(), getProfileInfo()])
   })
   .catch(error => {
     console.error('Ошибка при загрузке данных:', error);
-  });
+  }
+);
 
-  function renderProfileInfo(data) {
+function renderProfileInfo(data) {
   profileTitle.textContent = data.name;
   profileDescription.textContent = data.about;
   profileImage.style.backgroundImage = `url(${data.avatar})`;
-  }
+}
 
-  
-
+function renderCard(initialCards, myId) {
+  initialCards.forEach(function (elements) {
+    const cardData = elements;
+    const cardElement = createCard(
+      cardData,
+      myId,
+      handleDelete,
+      handleLike,
+      openImagePopup,
+      cardTemplate
+    );
+    places__list.append(cardElement);
+  });
+}

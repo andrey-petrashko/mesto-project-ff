@@ -37,3 +37,17 @@ export const deleteCard = (cardId) => {
       console.log(data);
     });
 }
+
+export const likeCard = (cardId, method) => {
+  fetch(config.baseUrl + "/cards/likes/" + cardId, { 
+    method: method,
+    headers: config.headers })
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (data) {
+      const counter = (Array.from(data.likes)).length;
+      return (counter);
+
+    });
+}
