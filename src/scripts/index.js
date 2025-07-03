@@ -10,9 +10,11 @@ import {
 
 import {
   prepareAnimation,
-  handleOverlayClick,
+  handleOverlay,
+  handleButtonClose,
   openPopup,
   closePopup,
+  handleButtonCloseMouseDown,
 } from "./modals.js";
 import { enableValidation, clearValidation } from "./validation.js";
 
@@ -62,38 +64,39 @@ const imagePopupCaption = largeImagePopup.querySelector(".popup__caption");
 formEditProfile.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  patchProfileInfo(profileNameInput.value, profileDescriptionInput.value).then(
-    (data) => {
+  patchProfileInfo(profileNameInput.value, profileDescriptionInput.value)
+    .then((data) => {
       profileTitle.textContent = data.name;
       profileDescription.textContent = data.about;
+      formEditProfile.reset();
       closePopup(popupProfileEdit);
-    }
-  );
+    })
+    .catch((error) => {
+      console.log("Ошибка при обновлении профиля:", error);
+    });
 });
 
 formChangeAvatar.addEventListener("submit", function (event) {
   event.preventDefault();
 
-  patchChangeAvatar(avatarInput.value).then((data) => {
-    profileImage.style.backgroundImage = `url(${data.avatar})`;
-    formChangeAvatar.reset();
-    closePopup(popupChangeAvatar);
-  });
+  patchChangeAvatar(avatarInput.value)
+    .then((data) => {
+      profileImage.style.backgroundImage = `url(${data.avatar})`;
+      formChangeAvatar.reset();
+      closePopup(popupChangeAvatar);
+    })
+    .catch((error) => {
+      console.log("Ошибка при изменении аватара:", error);
+    });
 });
 
 formNewPlace.addEventListener("submit", function (event) {
   event.preventDefault();
-
-  postNewPlace(descriptionPictureInput.value, linkPictureInput.value).then(
-    (data) => {
-      const newCardData = {};
-      newCardData.name = data.name;
-      newCardData.link = data.link;
-      newCardData["_id"] = data["_id"];
+  postNewPlace(descriptionPictureInput.value, linkPictureInput.value)
+    .then((data) => {
       const myId = data.owner["_id"];
-      newCardData.owner = data.owner;
       const cardElement = createCard(
-        newCardData,
+        data,
         myId,
         handleDelete,
         handleLike,
@@ -103,22 +106,25 @@ formNewPlace.addEventListener("submit", function (event) {
       formNewPlace.reset();
       places__list.prepend(cardElement);
       closePopup(popupNewCard);
-    }
-  );
+    })
+    .catch((error) => {
+      console.log("Ошибка добавления карточки:", error);
+    });
 });
 
 prepareAnimation(popups);
 
 popups.forEach(function (element) {
-  element.addEventListener("click", handleOverlayClick);
+  element.addEventListener("mousedown", handleOverlay);
+  element.addEventListener("click", handleButtonClose);
 });
 
 profileEditButton.addEventListener("click", openPopupProfileEdit);
 
 function openPopupProfileEdit() {
-  clearValidation(formPopupProfileEdit, validationConfig);
   profileNameInput.value = profileTitle.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
+  clearValidation(formPopupProfileEdit, validationConfig);
   openPopup(popupProfileEdit);
 }
 
@@ -132,8 +138,8 @@ function openPopupChangeAvatar() {
 newCardButton.addEventListener("click", openPopupNewCard);
 
 function openPopupNewCard() {
-  clearValidation(newCardForm, validationConfig);
   newCardForm.reset();
+  clearValidation(newCardForm, validationConfig);
   openPopup(popupNewCard);
 }
 

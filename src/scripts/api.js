@@ -9,20 +9,26 @@ const config = {
 export const getInitialCards = () => {
   return fetch(config.baseUrl + "/cards", { headers: config.headers })
     .then(function (res) {
-      return res.json();
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .then(function (data) {
-      return data;
+    .catch((err) => {
+      console.log(err);
     });
 };
 
 export const getProfileInfo = () => {
   return fetch(config.baseUrl + "/users/me", { headers: config.headers })
     .then(function (res) {
-      return res.json();
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
     })
-    .then(function (data) {
-      return data;
+    .catch((err) => {
+      console.log(err);
     });
 };
 
@@ -30,9 +36,16 @@ export const deleteCard = (cardId) => {
   fetch(config.baseUrl + "/cards/" + cardId, {
     method: "DELETE",
     headers: config.headers,
-  }).then(function (res) {
-    return res.json();
-  });
+  })
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const likeCard = (cardId, method) => {
@@ -40,11 +53,14 @@ export const likeCard = (cardId, method) => {
     method: method,
     headers: config.headers,
   })
-    .then((res) => res.json())
-    .then((data) => {
-      const likeArray = data.likes ? Array.from(data.likes) : [];
-      const counter = likeArray.length;
-      return counter;
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 
@@ -56,9 +72,16 @@ export const patchProfileInfo = function (name, about) {
       name: name,
       about: about,
     }),
-  }).then(function (response) {
-    return response.json();
-  });
+  })
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const patchChangeAvatar = function (avatarUrl) {
@@ -68,23 +91,34 @@ export const patchChangeAvatar = function (avatarUrl) {
     body: JSON.stringify({
       avatar: avatarUrl,
     }),
-  }).then(function (response) {
-    return response.json();
-  });
+  })
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 export const postNewPlace = function (name, link) {
-  return fetch("https://nomoreparties.co/v1/wff-cohort-41/cards", {
+  return fetch(config.baseUrl + "/cards/", {
     method: "POST",
-    headers: {
-      authorization: "8d0b0fef-7fc0-4f9e-a81c-c75c92bbe32f",
-      "Content-Type": "application/json",
-    },
+    headers: config.headers,
     body: JSON.stringify({
       name: name,
       link: link,
     }),
-  }).then(function (response) {
-    return response.json();
-  });
+  })
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };

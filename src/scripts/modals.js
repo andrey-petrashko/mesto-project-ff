@@ -11,23 +11,24 @@ function handleEsc(evt) {
   }
 }
 
-export function handleOverlayClick(evt) {
-  if (
-    evt.target.classList.contains("popup") ||
-    evt.target.classList.contains("popup__close")
-  ) {
+export function handleOverlay(evt) {
+  if (evt.target.classList.contains("popup")) {
+    closePopup(evt.target.closest(".popup"));
+  }
+}
+
+export function handleButtonClose(evt) {
+  if (evt.target.classList.contains("popup__close")) {
     closePopup(evt.target.closest(".popup"));
   }
 }
 
 export function openPopup(popupItem) {
-  popupItem.classList.remove("popup_is-animated");
   popupItem.classList.add("popup_is-opened");
   document.addEventListener("keydown", handleEsc);
 }
 
 export function closePopup(popupItem) {
   popupItem.classList.remove("popup_is-opened");
-  popupItem.classList.add("popup_is-animated");
   document.removeEventListener("keydown", handleEsc);
 }

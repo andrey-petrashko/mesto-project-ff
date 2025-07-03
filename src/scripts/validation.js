@@ -29,13 +29,11 @@ const checkInputValidity = (
   inputErrorClass,
   errorClass
 ) => {
-
- if (inputElement.validity.patternMismatch) {
+  if (inputElement.validity.patternMismatch) {
     inputElement.setCustomValidity(inputElement.dataset.customErrorMessage);
   } else {
     inputElement.setCustomValidity("");
   }
-
 
   if (!inputElement.validity.valid) {
     showInputError(
@@ -83,10 +81,6 @@ export function enableValidation(validationConfig) {
     document.querySelectorAll(validationConfig.formSelector)
   );
   formList.forEach((formElement) => {
-    formElement.addEventListener("submit", function (evt) {
-      evt.preventDefault();
-    });
-
     setEventListeners(
       formElement,
       validationConfig.inputSelector,
@@ -121,7 +115,6 @@ export function clearValidation(formElement, validationConfig) {
   const buttonElement = formElement.querySelector(
     validationConfig.submitButtonSelector
   );
-  buttonElement.classList.add(validationConfig.inactiveButtonClass);
   inputList.forEach((inputElement) => {
     hideInputError(
       formElement,
