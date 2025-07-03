@@ -63,7 +63,7 @@ const imagePopupCaption = largeImagePopup.querySelector(".popup__caption");
 
 formEditProfile.addEventListener("submit", function (event) {
   event.preventDefault();
-
+  formEditProfile.querySelector('.popup__button').textContent = "Сохранение...";
   patchProfileInfo(profileNameInput.value, profileDescriptionInput.value)
     .then((data) => {
       profileTitle.textContent = data.name;
@@ -71,6 +71,8 @@ formEditProfile.addEventListener("submit", function (event) {
       formEditProfile.reset();
       closePopup(popupProfileEdit);
     })
+    .then (() => {
+      formEditProfile.querySelector('.popup__button').textContent = "Сохранить"})
     .catch((error) => {
       console.log("Ошибка при обновлении профиля:", error);
     });
@@ -78,13 +80,15 @@ formEditProfile.addEventListener("submit", function (event) {
 
 formChangeAvatar.addEventListener("submit", function (event) {
   event.preventDefault();
-
+  formChangeAvatar.querySelector('.popup__button').textContent = "Сохранение...";
   patchChangeAvatar(avatarInput.value)
     .then((data) => {
       profileImage.style.backgroundImage = `url(${data.avatar})`;
       formChangeAvatar.reset();
       closePopup(popupChangeAvatar);
     })
+    .then (() => {
+      formChangeAvatar.querySelector('.popup__button').textContent = "Сохранить"})
     .catch((error) => {
       console.log("Ошибка при изменении аватара:", error);
     });
@@ -92,6 +96,9 @@ formChangeAvatar.addEventListener("submit", function (event) {
 
 formNewPlace.addEventListener("submit", function (event) {
   event.preventDefault();
+  formNewPlace.querySelector('.popup__button').textContent = "Сохранение...";
+
+
   postNewPlace(descriptionPictureInput.value, linkPictureInput.value)
     .then((data) => {
       const myId = data.owner["_id"];
@@ -101,16 +108,18 @@ formNewPlace.addEventListener("submit", function (event) {
         handleDelete,
         handleLike,
         openImagePopup,
-        cardTemplate
-      );
+        cardTemplate);
       formNewPlace.reset();
       places__list.prepend(cardElement);
       closePopup(popupNewCard);
     })
+    .then (() => {
+      formNewPlace.querySelector('.popup__button').textContent = "Сохранить"})
     .catch((error) => {
       console.log("Ошибка добавления карточки:", error);
     });
 });
+
 
 prepareAnimation(popups);
 

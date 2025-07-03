@@ -47,19 +47,23 @@ export function handleLike(likeButton, cardId, likeCounter) {
   if (!likeButton.classList.contains("card__like-button_is-active")) {
     const method = "PUT";
     likeButton.classList.add("card__like-button_is-active");
-    likeCard(cardId, method).then(function (data) {
-      likeCounter.textContent = data.likes.length
-        ? Array.from(data.likes).length
-        : 0;
-    });
+    likeCard(cardId, method)
+      .then(function (data) {
+        likeCounter.textContent = data.likes.length ? data.likes.length : 0;
+      })
+      .catch((error) => {
+        console.log("Ошибка добавления лайка:", error);
+      });
   } else {
     const method = "DELETE";
     likeButton.classList.remove("card__like-button_is-active");
-    likeCard(cardId, method).then(function (data) {
-      likeCounter.textContent = data.likes.length
-        ? Array.from(data.likes).length
-        : 0;
-    });
+    likeCard(cardId, method)
+      .then(function (data) {
+        likeCounter.textContent = data.likes.length ? data.likes.length : 0;
+      })
+      .catch((error) => {
+        console.log("Ошибка удаления лайка:", error);
+      });
   }
 }
 

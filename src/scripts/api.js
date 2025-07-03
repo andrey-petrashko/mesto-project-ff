@@ -33,7 +33,7 @@ export const getProfileInfo = () => {
 };
 
 export const deleteCard = (cardId) => {
-  fetch(config.baseUrl + "/cards/" + cardId, {
+  return fetch(config.baseUrl + "/cards/" + cardId, {
     method: "DELETE",
     headers: config.headers,
   })
@@ -47,6 +47,7 @@ export const deleteCard = (cardId) => {
       console.log(err);
     });
 };
+
 
 export const likeCard = (cardId, method) => {
   return fetch(config.baseUrl + "/cards/likes/" + cardId, {
