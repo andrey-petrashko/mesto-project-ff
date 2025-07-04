@@ -1,11 +1,7 @@
 import "../pages/index.css";
 import { createCard, handleDelete, handleLike } from "./card.js";
 import {
-  getInitialCards,
-  getProfileInfo,
-  patchProfileInfo,
-  patchChangeAvatar,
-  postNewPlace,
+  apiFunction
 } from "./api.js";
 
 import {
@@ -63,43 +59,60 @@ const imagePopupCaption = largeImagePopup.querySelector(".popup__caption");
 
 formEditProfile.addEventListener("submit", function (event) {
   event.preventDefault();
-  formEditProfile.querySelector('.popup__button').textContent = "Сохранение...";
-  patchProfileInfo(profileNameInput.value, profileDescriptionInput.value)
+  event.submitter.textContent = "Сохранение...";
+  const urlAdd = "/users/me";
+  const profileData = {
+    "name": profileNameInput.value,
+    "about": profileDescriptionInput.value
+  };
+  const method = "PATCH";
+  apiFunction(urlAdd, method, profileData)
     .then((data) => {
       profileTitle.textContent = data.name;
       profileDescription.textContent = data.about;
       formEditProfile.reset();
       closePopup(popupProfileEdit);
     })
-    .then (() => {
-      formEditProfile.querySelector('.popup__button').textContent = "Сохранить"})
     .catch((error) => {
       console.log("Ошибка при обновлении профиля:", error);
+    })
+    .finally(() => {
+      event.submitter.textContent = "Сохранить";
     });
-});
+})
 
 formChangeAvatar.addEventListener("submit", function (event) {
   event.preventDefault();
-  formChangeAvatar.querySelector('.popup__button').textContent = "Сохранение...";
-  patchChangeAvatar(avatarInput.value)
+  event.submitter.textContent = "Сохранение...";
+  const data = {
+    "avatar": avatarInput.value,
+  };
+  const urlAdd = "/users/me/avatar";
+  const method = "PATCH";
+  apiFunction(urlAdd, method, data)
     .then((data) => {
       profileImage.style.backgroundImage = `url(${data.avatar})`;
       formChangeAvatar.reset();
       closePopup(popupChangeAvatar);
     })
-    .then (() => {
-      formChangeAvatar.querySelector('.popup__button').textContent = "Сохранить"})
     .catch((error) => {
-      console.log("Ошибка при изменении аватара:", error);
+      console.log("Ошибка при обновлении автара:", error);
+    })
+    .finally(() => {
+      event.submitter.textContent = "Сохранить";
     });
-});
+})
 
 formNewPlace.addEventListener("submit", function (event) {
   event.preventDefault();
-  formNewPlace.querySelector('.popup__button').textContent = "Сохранение...";
-
-
-  postNewPlace(descriptionPictureInput.value, linkPictureInput.value)
+  event.submitter.textContent = "Сохранение...";
+  const urlAdd = "/cards/";
+  const method = "POST";
+  const newCardData = {
+    "name": descriptionPictureInput.value,
+    "link": linkPictureInput.value
+  };
+  apiFunction(urlAdd, method, newCardData)
     .then((data) => {
       const myId = data.owner["_id"];
       const cardElement = createCard(
@@ -113,13 +126,13 @@ formNewPlace.addEventListener("submit", function (event) {
       places__list.prepend(cardElement);
       closePopup(popupNewCard);
     })
-    .then (() => {
-      formNewPlace.querySelector('.popup__button').textContent = "Сохранить"})
     .catch((error) => {
-      console.log("Ошибка добавления карточки:", error);
+      console.log("Ошибка при добавлении карточки:", error);
+    })
+    .finally(() => {
+      event.submitter.textContent = "Сохранить";
     });
-});
-
+})
 
 prepareAnimation(popups);
 
@@ -161,14 +174,24 @@ function openImagePopup(cardData) {
 
 enableValidation(validationConfig);
 
-Promise.all([getInitialCards(), getProfileInfo()])
-  .then(([initialCards, profileInfo]) => {
-    renderCard(initialCards, profileInfo._id);
-    renderProfileInfo(profileInfo);
-  })
-  .catch((error) => {
-    console.error("Ошибка при загрузке данных:", error);
-  });
+
+
+function initialPage() {
+
+  const initialCardsUrlAdd = "/cards";
+  const profileInfoUrlAdd = "/users/me";
+  const method = "GET";
+
+  Promise.all([apiFunction(initialCardsUrlAdd), apiFunction(profileInfoUrlAdd)])
+    .then(([initialCards, profileInfo]) => {
+      renderCard(initialCards, profileInfo._id);
+      renderProfileInfo(profileInfo);
+    })
+    .catch((error) => {
+      console.error("Ошибка при загрузке данных:", error);
+    });
+}
+initialPage();
 
 function renderProfileInfo(data) {
   profileTitle.textContent = data.name;
@@ -179,7 +202,6 @@ function renderProfileInfo(data) {
 function renderCard(initialCards, myId) {
   initialCards.forEach(function (elements) {
     const cardData = elements;
-
     const cardElement = createCard(
       cardData,
       myId,

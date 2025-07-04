@@ -6,120 +6,19 @@ const config = {
   },
 };
 
-export const getInitialCards = () => {
-  return fetch(config.baseUrl + "/cards", { headers: config.headers })
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+function getResponseData(res) {
+  if (!res.ok) {
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+  return res.json();
+}
 
-export const getProfileInfo = () => {
-  return fetch(config.baseUrl + "/users/me", { headers: config.headers })
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-export const deleteCard = (cardId) => {
-  return fetch(config.baseUrl + "/cards/" + cardId, {
-    method: "DELETE",
-    headers: config.headers,
-  })
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-
-export const likeCard = (cardId, method) => {
-  return fetch(config.baseUrl + "/cards/likes/" + cardId, {
+export const apiFunction = function (urlAdd, method, data) {
+  return fetch(config.baseUrl + urlAdd, {
     method: method,
     headers: config.headers,
+    body: JSON.stringify(data),
   })
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    .then(getResponseData)
 };
 
-export const patchProfileInfo = function (name, about) {
-  return fetch(config.baseUrl + "/users/me", {
-    method: "PATCH",
-    headers: config.headers,
-    body: JSON.stringify({
-      name: name,
-      about: about,
-    }),
-  })
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-export const patchChangeAvatar = function (avatarUrl) {
-  return fetch(config.baseUrl + "/users/me/avatar", {
-    method: "PATCH",
-    headers: config.headers,
-    body: JSON.stringify({
-      avatar: avatarUrl,
-    }),
-  })
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-export const postNewPlace = function (name, link) {
-  return fetch(config.baseUrl + "/cards/", {
-    method: "POST",
-    headers: config.headers,
-    body: JSON.stringify({
-      name: name,
-      link: link,
-    }),
-  })
-    .then(function (res) {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};

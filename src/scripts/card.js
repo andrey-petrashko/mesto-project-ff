@@ -1,4 +1,4 @@
-import { likeCard, deleteCard } from "./api";
+import { apiFunction } from "./api";
 
 export const createCard = (
   cardData,
@@ -44,22 +44,23 @@ export const createCard = (
 };
 
 export function handleLike(likeButton, cardId, likeCounter) {
+  const urlAdd = "/cards/likes/"+cardId;
   if (!likeButton.classList.contains("card__like-button_is-active")) {
     const method = "PUT";
-    likeButton.classList.add("card__like-button_is-active");
-    likeCard(cardId, method)
+    apiFunction(urlAdd, method)
       .then(function (data) {
         likeCounter.textContent = data.likes.length ? data.likes.length : 0;
+        likeButton.classList.add("card__like-button_is-active");
       })
       .catch((error) => {
         console.log("Ошибка добавления лайка:", error);
       });
   } else {
     const method = "DELETE";
-    likeButton.classList.remove("card__like-button_is-active");
-    likeCard(cardId, method)
+    apiFunction(urlAdd, method)
       .then(function (data) {
         likeCounter.textContent = data.likes.length ? data.likes.length : 0;
+        likeButton.classList.remove("card__like-button_is-active");
       })
       .catch((error) => {
         console.log("Ошибка удаления лайка:", error);
@@ -68,7 +69,9 @@ export function handleLike(likeButton, cardId, likeCounter) {
 }
 
 export function handleDelete(cardElement, cardId) {
-  deleteCard(cardId)
+  const method = "DELETE";
+  const urlAdd = "/cards/"+cardId;
+  apiFunction(urlAdd, method)
     .then(() => {
       cardElement.remove();
     })
