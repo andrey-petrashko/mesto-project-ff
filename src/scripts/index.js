@@ -9,8 +9,7 @@ import {
   handleOverlay,
   handleButtonClose,
   openPopup,
-  closePopup,
-  handleButtonCloseMouseDown,
+  closePopup
 } from "./modals.js";
 import { enableValidation, clearValidation } from "./validation.js";
 
@@ -66,6 +65,7 @@ formEditProfile.addEventListener("submit", function (event) {
     "about": profileDescriptionInput.value
   };
   const method = "PATCH";
+
   apiFunction(urlAdd, method, profileData)
     .then((data) => {
       profileTitle.textContent = data.name;
@@ -89,6 +89,7 @@ formChangeAvatar.addEventListener("submit", function (event) {
   };
   const urlAdd = "/users/me/avatar";
   const method = "PATCH";
+
   apiFunction(urlAdd, method, data)
     .then((data) => {
       profileImage.style.backgroundImage = `url(${data.avatar})`;
@@ -112,6 +113,7 @@ formNewPlace.addEventListener("submit", function (event) {
     "name": descriptionPictureInput.value,
     "link": linkPictureInput.value
   };
+
   apiFunction(urlAdd, method, newCardData)
     .then((data) => {
       const myId = data.owner["_id"];
@@ -174,8 +176,6 @@ function openImagePopup(cardData) {
 
 enableValidation(validationConfig);
 
-
-
 function initialPage() {
 
   const initialCardsUrlAdd = "/cards";
@@ -191,6 +191,7 @@ function initialPage() {
       console.error("Ошибка при загрузке данных:", error);
     });
 }
+
 initialPage();
 
 function renderProfileInfo(data) {
