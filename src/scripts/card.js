@@ -44,7 +44,6 @@ export const createCard = (
 };
 
 export function handleLike(likeButton, cardId, likeCounter) {
-  const urlAdd = "/cards/likes/"+cardId;
   if (!likeButton.classList.contains("card__like-button_is-active")) {
 
     likeCard(cardId)

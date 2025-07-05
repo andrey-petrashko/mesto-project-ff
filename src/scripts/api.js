@@ -14,14 +14,16 @@ function getResponseData(res) {
 }
 
 export const getInitialCards = () => {
-  return fetch(config.baseUrl + "/cards", { 
-    headers: config.headers })
+  return fetch(config.baseUrl + "/cards", {
+    headers: config.headers
+  })
     .then(getResponseData)
 };
 
 export const getProfileInfo = () => {
-  return fetch(config.baseUrl + "/users/me", { 
-    headers: config.headers })
+  return fetch(config.baseUrl + "/users/me", {
+    headers: config.headers
+  })
     .then(getResponseData)
 };
 
@@ -34,19 +36,19 @@ export const deleteCard = (cardId) => {
 };
 
 
-export const likeCard = (cardId) => { 
-  return fetch(config.baseUrl + "/cards/likes/" + cardId, { 
-    method: "PUT", 
-    headers: config.headers, 
-  }) 
+export const likeCard = (cardId) => {
+  return fetch(config.baseUrl + "/cards/likes/" + cardId, {
+    method: "PUT",
+    headers: config.headers,
+  })
     .then(getResponseData)
 };
 
-export const disLikeCard = (cardId) => { 
-  return fetch(config.baseUrl + "/cards/likes/" + cardId, { 
-    method: "DELETE", 
-    headers: config.headers, 
-  }) 
+export const disLikeCard = (cardId) => {
+  return fetch(config.baseUrl + "/cards/likes/" + cardId, {
+    method: "DELETE",
+    headers: config.headers,
+  })
     .then(getResponseData)
 };
 
