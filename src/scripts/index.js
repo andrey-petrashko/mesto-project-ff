@@ -1,7 +1,7 @@
 import "../pages/index.css";
 import { createCard, handleDelete, handleLike } from "./card.js";
 import {
-  apiFunction
+  getInitialCards, getProfileInfo, patchProfileInfo, patchChangeAvatar, postNewPlace
 } from "./api.js";
 
 import {
@@ -59,14 +59,12 @@ const imagePopupCaption = largeImagePopup.querySelector(".popup__caption");
 formEditProfile.addEventListener("submit", function (event) {
   event.preventDefault();
   event.submitter.textContent = "Сохранение...";
-  const urlAdd = "/users/me";
   const profileData = {
     "name": profileNameInput.value,
     "about": profileDescriptionInput.value
   };
-  const method = "PATCH";
 
-  apiFunction(urlAdd, method, profileData)
+  patchProfileInfo(profileData)
     .then((data) => {
       profileTitle.textContent = data.name;
       profileDescription.textContent = data.about;
@@ -84,13 +82,11 @@ formEditProfile.addEventListener("submit", function (event) {
 formChangeAvatar.addEventListener("submit", function (event) {
   event.preventDefault();
   event.submitter.textContent = "Сохранение...";
-  const data = {
+  const avatarData = {
     "avatar": avatarInput.value,
   };
-  const urlAdd = "/users/me/avatar";
-  const method = "PATCH";
 
-  apiFunction(urlAdd, method, data)
+  patchChangeAvatar(avatarData)
     .then((data) => {
       profileImage.style.backgroundImage = `url(${data.avatar})`;
       formChangeAvatar.reset();
@@ -107,14 +103,12 @@ formChangeAvatar.addEventListener("submit", function (event) {
 formNewPlace.addEventListener("submit", function (event) {
   event.preventDefault();
   event.submitter.textContent = "Сохранение...";
-  const urlAdd = "/cards/";
-  const method = "POST";
   const newCardData = {
     "name": descriptionPictureInput.value,
     "link": linkPictureInput.value
   };
 
-  apiFunction(urlAdd, method, newCardData)
+  postNewPlace(newCardData)
     .then((data) => {
       const myId = data.owner["_id"];
       const cardElement = createCard(
@@ -178,11 +172,7 @@ enableValidation(validationConfig);
 
 function initialPage() {
 
-  const initialCardsUrlAdd = "/cards";
-  const profileInfoUrlAdd = "/users/me";
-  const method = "GET";
-
-  Promise.all([apiFunction(initialCardsUrlAdd), apiFunction(profileInfoUrlAdd)])
+  Promise.all([getInitialCards(), getProfileInfo()])
     .then(([initialCards, profileInfo]) => {
       renderCard(initialCards, profileInfo._id);
       renderProfileInfo(profileInfo);

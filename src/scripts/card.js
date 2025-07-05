@@ -1,4 +1,4 @@
-import { apiFunction } from "./api";
+import { deleteCard, likeCard, disLikeCard } from "./api";
 
 export const createCard = (
   cardData,
@@ -46,8 +46,8 @@ export const createCard = (
 export function handleLike(likeButton, cardId, likeCounter) {
   const urlAdd = "/cards/likes/"+cardId;
   if (!likeButton.classList.contains("card__like-button_is-active")) {
-    const method = "PUT";
-    apiFunction(urlAdd, method)
+
+    likeCard(cardId)
       .then(function (data) {
         likeCounter.textContent = data.likes.length ? data.likes.length : 0;
         likeButton.classList.add("card__like-button_is-active");
@@ -56,8 +56,8 @@ export function handleLike(likeButton, cardId, likeCounter) {
         console.log("Ошибка добавления лайка:", error);
       });
   } else {
-    const method = "DELETE";
-    apiFunction(urlAdd, method)
+
+    disLikeCard(cardId)
       .then(function (data) {
         likeCounter.textContent = data.likes.length ? data.likes.length : 0;
         likeButton.classList.remove("card__like-button_is-active");
@@ -69,9 +69,8 @@ export function handleLike(likeButton, cardId, likeCounter) {
 }
 
 export function handleDelete(cardElement, cardId) {
-  const method = "DELETE";
-  const urlAdd = "/cards/"+cardId;
-  apiFunction(urlAdd, method)
+
+  deleteCard(cardId)
     .then(() => {
       cardElement.remove();
     })

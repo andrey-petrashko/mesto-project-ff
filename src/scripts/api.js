@@ -13,12 +13,66 @@ function getResponseData(res) {
   return res.json();
 }
 
-export const apiFunction = function (urlAdd, method, data) {
-  return fetch(config.baseUrl + urlAdd, {
-    method: method,
+export const getInitialCards = () => {
+  return fetch(config.baseUrl + "/cards", { 
+    headers: config.headers })
+    .then(getResponseData)
+};
+
+export const getProfileInfo = () => {
+  return fetch(config.baseUrl + "/users/me", { 
+    headers: config.headers })
+    .then(getResponseData)
+};
+
+export const deleteCard = (cardId) => {
+  return fetch(config.baseUrl + "/cards/" + cardId, {
+    method: "DELETE",
+    headers: config.headers,
+  })
+    .then(getResponseData)
+};
+
+
+export const likeCard = (cardId) => { 
+  return fetch(config.baseUrl + "/cards/likes/" + cardId, { 
+    method: "PUT", 
+    headers: config.headers, 
+  }) 
+    .then(getResponseData)
+};
+
+export const disLikeCard = (cardId) => { 
+  return fetch(config.baseUrl + "/cards/likes/" + cardId, { 
+    method: "DELETE", 
+    headers: config.headers, 
+  }) 
+    .then(getResponseData)
+};
+
+export const patchProfileInfo = function (data) {
+  return fetch(config.baseUrl + "/users/me", {
+    method: "PATCH",
     headers: config.headers,
     body: JSON.stringify(data),
   })
     .then(getResponseData)
 };
 
+export const patchChangeAvatar = function (data) {
+  return fetch(config.baseUrl + "/users/me/avatar", {
+    method: "PATCH",
+    headers: config.headers,
+    body: JSON.stringify(data),
+  })
+    .then(getResponseData)
+};
+
+export const postNewPlace = function (data) {
+  return fetch(config.baseUrl + "/cards/", {
+    method: "POST",
+    headers: config.headers,
+    body: JSON.stringify(data),
+  })
+    .then(getResponseData)
+};
