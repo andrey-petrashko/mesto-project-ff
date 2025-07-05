@@ -1,4 +1,4 @@
-import { deleteCard, likeCard, disLikeCard } from "./api";
+import { deleteCard, likeCard } from "./api";
 
 export const createCard = (
   cardData,
@@ -46,7 +46,7 @@ export const createCard = (
 export function handleLike(likeButton, cardId, likeCounter) {
   if (!likeButton.classList.contains("card__like-button_is-active")) {
 
-    likeCard(cardId)
+    likeCard(cardId, true)
       .then(function (data) {
         likeCounter.textContent = data.likes.length ? data.likes.length : 0;
         likeButton.classList.add("card__like-button_is-active");
@@ -56,7 +56,7 @@ export function handleLike(likeButton, cardId, likeCounter) {
       });
   } else {
 
-    disLikeCard(cardId)
+    likeCard(cardId, false)
       .then(function (data) {
         likeCounter.textContent = data.likes.length ? data.likes.length : 0;
         likeButton.classList.remove("card__like-button_is-active");
@@ -68,7 +68,6 @@ export function handleLike(likeButton, cardId, likeCounter) {
 }
 
 export function handleDelete(cardElement, cardId) {
-
   deleteCard(cardId)
     .then(() => {
       cardElement.remove();

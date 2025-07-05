@@ -36,17 +36,16 @@ export const deleteCard = (cardId) => {
 };
 
 
-export const likeCard = (cardId) => {
+export const likeCard = (cardId, addOrRemove) => {
+  let method;
+  if (addOrRemove === true) {
+    method = "PUT";
+  }
+  else {
+    method = "DELETE";
+  }
   return fetch(config.baseUrl + "/cards/likes/" + cardId, {
-    method: "PUT",
-    headers: config.headers,
-  })
-    .then(getResponseData)
-};
-
-export const disLikeCard = (cardId) => {
-  return fetch(config.baseUrl + "/cards/likes/" + cardId, {
-    method: "DELETE",
+    method: method,
     headers: config.headers,
   })
     .then(getResponseData)
